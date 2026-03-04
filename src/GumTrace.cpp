@@ -293,13 +293,15 @@ void GumTrace::callout_callback(GumCpuContext *cpu_context, gpointer user_data) 
 
     self->trace_flash++;
     if (self->options & _GUM_OPTIONS_DEBUG) {
-        if (buff_n > 0) {
-            self->trace_file.write(buff, buff_n);
-            buff_n = 0;
-        }
+        if (self->trace_flash > 20) {
+            if (buff_n > 0) {
+                self->trace_file.write(buff, buff_n);
+                buff_n = 0;
+            }
 
-        self->trace_file.flush();
-        self->trace_flash = 0;
+            self->trace_file.flush();
+            self->trace_flash = 0;
+        }
     } else {
         if (self->trace_flash > 100000) {
             if (buff_n > 0) {

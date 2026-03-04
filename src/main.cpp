@@ -32,24 +32,25 @@ gboolean module_enumerate (GumModule * module, gpointer user_data) {
     const char *module_name = gum_module_get_name(module);
 
     auto module_path = gum_module_get_path(module);
+    auto gum_module_range = gum_module_get_range(module);
+
+    LOGE("module_enumerate %s %s %lx %lx", module_name, module_path, gum_module_range->base_address, gum_module_range->size);
+
     if (strncmp(module_path, "/system/", 8) == 0 || strncmp(module_path, "/system_ext/", 12) == 0  ||
         strncmp(module_path, "/apex/", 6) == 0 || strncmp(module_path, "/vendor/", 8) == 0 ||
         strstr(module_path, "libGumTrace.so") != nullptr || strstr(module_path, ".odex") != nullptr ||
         strstr(module_path, "memfd") != nullptr) {
-        gum_stalker_exclude(instance->_stalker, gum_module_get_range(module));
+        gum_stalker_exclude(instance->_stalker, gum_module_range);
     } else {
         if (instance->modules.count(module_name) == 0) {
             auto &module_map = instance->modules[module_name];
-            auto *gum_module_range = gum_module_get_range(module);
             module_map ["base"] = gum_module_range->base_address;
             module_map ["size"] = gum_module_range->size;
-
-            LOGE("module_enumerate %s %s %lu %lu", module_name, module_path, gum_module_range->base_address, gum_module_range->size);
         }
     }
 
     // if (instance->modules.count(module_name) <= 0) {
-        // gum_stalker_exclude(instance->_stalker, gum_module_get_range(module));
+        // gum_stalker_exclude(instance->_stalker, gum_module_get_range(module));x
     // }
 
     return true;
