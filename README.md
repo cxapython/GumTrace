@@ -1,8 +1,7 @@
 
-# GumTrace
+# 真机 GumTrace，每 3 秒 1G
 
-基于 Frida Gum (Stalker) 引擎的 ARM64 动态指令追踪工具，支持 Android 和 iOS 平台。
-
+基于 Frida Gum (Stalker) 引擎的 ARM64 真机动态指令追踪工具，支持 Android 和 iOS 平台。
 ## 致谢
 -  [Trace UI](https://github.com/imj01y/trace-ui) - 本项目官方指定的 trace 分析工具。高性能 ARM64 执行 trace 可视化分析工具。基于 Tauri 2 + React 构建的桌面应用，专为安全研究员设计，支持千万行或亿行级大规模 trace 的流畅浏览、函数调用树折叠、反向污点追踪、内存/寄存器实时查看等功能。Trace Ul 与 GumTrace 深度适配，是在分析 trace 日志时的得力助手。感谢 [@imj01y](https://github.com/imj01y) 的开源贡献!
 
