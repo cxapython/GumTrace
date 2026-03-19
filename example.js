@@ -33,16 +33,36 @@ function stopTrace() {
     gumtrace_unrun()
 }
 
-// 示例：hook 目标函数，在其执行期间进行追踪
-let targetModule = Process.findModuleByName(targetSo)
-Interceptor.attach(targetModule.base.add(0x1234), {
-    onEnter() {
-        startTrace()
-        this.tracing = true
-    },
-    onLeave() {
-        if (this.tracing) {
-            stopTrace()
+// Warning: All apis from Frida 17
+function hook() {
+    let dlopen_ext = Module.getGlobalExportByName('android_dlopen_ext')
+    Interceptor.attach(dlopen_ext, {
+        onEnter(args) {
+            let pathSo = args[0].readCString()
+            if (pathSo.indexOf(targetSo) > -1) {
+                this.can = true
+            }
+        },
+        onLeave() {
+            if (this.can) {
+
+                // 示例：hook 目标函数，在其执行期间进行追踪
+                let targetModule = Process.findModuleByName(targetSo)
+                Interceptor.attach(targetModule.base.add(0x1234), {
+                    onEnter() {
+                        startTrace()
+                        this.tracing = true
+                    },
+                    onLeave() {
+                        if (this.tracing) {
+                            stopTrace()
+                        }
+                    }
+                })
+
+            }
         }
-    }
-})
+    })
+}
+
+setImmediate(hook)
